@@ -4,8 +4,22 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toutiao-common" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toutiao-common/common-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-common/common-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-common/common-log/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-common/common-redis/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toutiao-configserver" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-configserver/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toutiao-eureka" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-eureka/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toutiao-gateway" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-service-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-service-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-service-api/toutiao-news-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-service-api/toutiao-system-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-service/toutiao-auth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-service/toutiao-news/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toutiao-service/toutiao-system/src/main/java" charset="UTF-8" />
   </component>
 </project>

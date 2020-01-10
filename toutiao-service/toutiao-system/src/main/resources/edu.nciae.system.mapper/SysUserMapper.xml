@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nciae.system.mapper.SysUserMapper">
+  <resultMap id="BaseResultMap" type="edu.nciae.system.domain.SysUser">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="phonenumber" jdbcType="VARCHAR" property="phonenumber" />
+    <result column="gender" jdbcType="CHAR" property="gender" />
+    <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+    <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
+    <result column="login_date" jdbcType="TIMESTAMP" property="loginDate" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="user_province" jdbcType="VARCHAR" property="userProvince" />
+    <result column="user_city" jdbcType="VARCHAR" property="userCity" />
+  </resultMap>
+  <resultMap id="SysUserVoMap" type="edu.nciae.system.vo.SysUserVo">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="phonenumber" jdbcType="VARCHAR" property="phonenumber" />
+    <result column="gender" jdbcType="CHAR" property="gender" />
+    <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="user_province" jdbcType="VARCHAR" property="userProvince" />
+    <result column="user_city" jdbcType="VARCHAR" property="userCity" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="edu.nciae.system.domain.SysUser">
+    insert into sys_user (user_id, user_name, avatar, 
+      phonenumber, gender, birthday, 
+      status, del_flag, login_ip, 
+      login_date, create_time, update_time, 
+      remark, user_province, user_city
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
+      #{phonenumber,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, #{birthday,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR}, #{delFlag,jdbcType=CHAR}, #{loginIp,jdbcType=VARCHAR}, 
+      #{loginDate,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{userProvince,jdbcType=VARCHAR}, #{userCity,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="edu.nciae.system.domain.SysUser">
+    update sys_user
+    <set>
+      <if test="userName != null and userName != ''">user_name = #{userName},</if>
+      <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+      <if test="phonenumber != null and phonenumber != ''">phonenumber = #{phonenumber},</if>
+      <if test="gender != null and gender != ''">gender = #{gender},</if>
+      <if test="birthday != null">birthday = #{birthday},</if>
+      <if test="status != null and status != ''">status = #{status},</if>
+      <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+      <if test="loginIp != null and loginIp != ''">login_ip = #{loginIp},</if>
+      <if test="loginDate != null">login_date = #{loginDate},</if>
+      <if test="createTime != null">create_time = #{createTime},</if>
+      <if test="updateTime != null">update_time = #{updateTime},</if>
+      <if test="remark != null and remark != ''">remark = #{remark},</if>
+      <if test="userProvince != null and userProvince != ''">user_province = #{userProvince},</if>
+      <if test="userCity != null and userCity != ''">user_city = #{userCity},</if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select user_id, user_name, avatar, phonenumber, gender, birthday, status,  remark, user_province, user_city
+    from sys_user
+    where user_id = #{userId,jdbcType=INTEGER} and del_flag = 0
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select user_id, user_name, avatar, phonenumber, gender, birthday, status, del_flag, 
+    login_ip, login_date, create_time, update_time, remark, user_province, user_city
+    from sys_user
+  </select>
+  <select id="selectSysUserByPhonenumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select user_id, user_name, avatar, phonenumber, gender, birthday, status, del_flag,
+    login_ip, login_date, create_time, update_time, remark, user_province, user_city
+    from sys_user
+    where phonenumber = #{phonenumber} and del_flag = 0
+  </select>
+  <select id="selectSysUserByUserId" parameterType="java.lang.Integer" resultMap="SysUserVoMap">
+    select user_id, user_name, avatar, phonenumber, gender, birthday,  remark, user_province, user_city
+    from sys_user
+    where user_id = #{userId,jdbcType=INTEGER} and del_flag = 0
+  </select>
+</mapper>

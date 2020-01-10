@@ -6,20 +6,37 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="toutiao-gateway" />
-        <module name="toutiao-eureka" />
-        <module name="toutiao-configserver" />
+        <module name="toutiao-news" />
         <module name="common-core" />
+        <module name="toutiao-eureka" />
+        <module name="toutiao-auth" />
+        <module name="toutiao-news-api" />
+        <module name="common-redis" />
+        <module name="toutiao-service" />
+        <module name="toutiao-system-api" />
+        <module name="common-log" />
+        <module name="toutiao-gateway" />
+        <module name="toutiao-system" />
+        <module name="toutiao-configserver" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="common-core" options="-parameters" />
+      <module name="common-log" options="-parameters" />
+      <module name="common-redis" options="-parameters" />
+      <module name="toutiao-auth" options="-parameters" />
       <module name="toutiao-common" options="" />
       <module name="toutiao-configserver" options="-parameters" />
       <module name="toutiao-eureka" options="-parameters" />
       <module name="toutiao-gateway" options="-parameters" />
+      <module name="toutiao-news" options="-parameters" />
+      <module name="toutiao-news-api" options="-parameters" />
+      <module name="toutiao-service" options="-parameters" />
+      <module name="toutiao-service-api" options="" />
+      <module name="toutiao-system" options="-parameters" />
+      <module name="toutiao-system-api" options="-parameters" />
     </option>
   </component>
 </project>

@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: gateway
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     gateway:
       discovery:
@@ -21,10 +23,10 @@ spring:
             - Path=/system/**
           filters:
             - StripPrefix=1
-        - id: order  # 鉴权中心
-          uri: lb://order  # 目标服务地址，uri以lb://开头（lb代表从注册中心获取服务），后面接的就是你需要转发到的服务名称
+        - id: news  # 鉴权中心
+          uri: lb://news  # 目标服务地址，uri以lb://开头（lb代表从注册中心获取服务），后面接的就是你需要转发到的服务名称
           predicates:
-            - Path=/order/**    # 要拦截的URL配置
+            - Path=/news/**    # 要拦截的URL配置
           filters:
             # 限流配置
             - StripPrefix=1

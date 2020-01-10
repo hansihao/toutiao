@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nciae.news.mapper.NewsMapper">
+  <resultMap id="BaseResultMap" type="edu.nciae.news.domain.News">
+    <id column="news_id" jdbcType="BIGINT" property="newsId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="news_title" jdbcType="VARCHAR" property="newsTitle" />
+    <result column="post_time" jdbcType="TIMESTAMP" property="postTime" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="reading_volume" jdbcType="INTEGER" property="readingVolume" />
+    <result column="praise_points" jdbcType="INTEGER" property="praisePoints" />
+    <result column="collection_volume" jdbcType="INTEGER" property="collectionVolume" />
+  </resultMap>
+  <resultMap id="NewsVoMap" type="edu.nciae.news.vo.NewsVo">
+    <id column="news_id" jdbcType="BIGINT" property="newsId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="news_title" jdbcType="VARCHAR" property="newsTitle" />
+    <result column="post_time" jdbcType="TIMESTAMP" property="postTime" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="reading_volume" jdbcType="INTEGER" property="readingVolume" />
+    <result column="praise_points" jdbcType="INTEGER" property="praisePoints" />
+    <result column="collection_volume" jdbcType="INTEGER" property="collectionVolume" />
+    <result column="iscollection" jdbcType="INTEGER" property="iscollection" />
+    <result column="isfollow" jdbcType="INTEGER" property="isfollow" />
+    <result column="attitude" jdbcType="INTEGER" property="attitude" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from news
+    where news_id = #{newsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="edu.nciae.news.domain.News">
+    <selectKey keyProperty="newsId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into news (user_id, news_title, post_time, 
+      content, status, reading_volume, 
+      praise_points, collection_volume)
+    values (#{userId,jdbcType=INTEGER}, #{newsTitle,jdbcType=VARCHAR}, #{postTime,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{readingVolume,jdbcType=INTEGER}, 
+      #{praisePoints,jdbcType=INTEGER}, #{collectionVolume,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="edu.nciae.news.domain.News">
+    update news
+    set user_id = #{userId,jdbcType=INTEGER},
+      news_title = #{newsTitle,jdbcType=VARCHAR},
+      post_time = #{postTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=VARCHAR},
+      status = #{status,jdbcType=CHAR},
+      reading_volume = #{readingVolume,jdbcType=INTEGER},
+      praise_points = #{praisePoints,jdbcType=INTEGER},
+      collection_volume = #{collectionVolume,jdbcType=INTEGER}
+    where news_id = #{newsId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select news_id, user_id, news_title, post_time, content, status, reading_volume, 
+    praise_points, collection_volume
+    from news
+    where news_id = #{newsId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select news_id, user_id, news_title, post_time, content, status, reading_volume, 
+    praise_points, collection_volume
+    from news
+  </select>
+  <select id="selectNewsByNewsId" resultMap="NewsVoMap">
+    select news_id, u.user_id, u.user_name, u.avatar, news_title, post_time, content, reading_volume,
+    praise_points, collection_volume,
+		case when (select count(news_collection.collection_id) from news_collection where news_collection.user_id = #{userId} and news.news_id = #{newsId,jdbcType=BIGINT} and news_collection.`status` = '0') > 0 then 1 else 0 end as iscollection,
+		case when (select count(user_follow.follow_id) from user_follow where user_follow.`status`='0' and user_follow.user_id = #{userId} and user_follow.follow_user = news.user_id) > 0 then 1 else 0 end as isfollow,
+		case when (select count(news_praise.praise_id) from news_praise where news_praise.user_id = #{userId} and news_praise.news_id = #{newsId,jdbcType=BIGINT} and news_praise.`status` = '0') > 0 then 1 else 0 end as attitude
+    from news LEFT JOIN sys_user u on news.user_id = u.user_id
+    where news_id = #{newsId,jdbcType=BIGINT} and news.status = '0'
+  </select>
+  <update id="addNewsPraiseVolume" parameterType="java.lang.Long">
+    update news
+    set praise_points = praise_points + 1
+    where news_id = #{newsId,jdbcType=BIGINT}
+  </update>
+  <update id="reduceNewsPraiseVolume" parameterType="java.lang.Long">
+    update news
+    set praise_points = praise_points - 1
+    where news_id = #{newsId,jdbcType=BIGINT}
+  </update>
+  <update id="addNewsReadingVolume" parameterType="java.lang.Long">
+    update news
+    set reading_volume = reading_volume + 1
+    where news_id = #{newsId,jdbcType=BIGINT}
+  </update>
+</mapper>

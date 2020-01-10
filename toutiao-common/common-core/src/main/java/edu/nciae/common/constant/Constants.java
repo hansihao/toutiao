@@ -62,11 +62,10 @@ public class Constants {
 
     public static final String TOKEN = "token";
 
-    public static final String DEFAULT_CODE_KEY = "random_code_";
-
     public final static String ACCESS_TOKEN = "access_token_";
 
     public final static String ACCESS_USERID = "access_userid_";
 
-    public static final String RESOURCE_PREFIX = "/profile";
+    public final static String ACCESS_REFRESHTOKEN = "access_refreshtoken_";
+
 }

@@ -13,6 +13,11 @@
         <module>toutiao-configserver</module>
         <module>toutiao-gateway</module>
         <module>toutiao-common</module>
+        <module>toutiao-service</module>
+        <module>toutiao-service-api</module>
+        <module>toutiao-service/toutiao-auth</module>
+        <module>toutiao-service/toutiao-system</module>
+        <module>toutiao-service/toutiao-news</module>
     </modules>
 
     <parent>

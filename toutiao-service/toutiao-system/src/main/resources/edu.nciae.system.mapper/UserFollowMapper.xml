@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nciae.system.mapper.UserFollowMapper">
+  <resultMap id="BaseResultMap" type="edu.nciae.system.domain.UserFollow">
+    <id column="follow_id" jdbcType="INTEGER" property="followId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="follow_user" jdbcType="INTEGER" property="followUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="status" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <resultMap id="UserFollowVo" type="edu.nciae.system.vo.UserFollowVo">
+    <id column="uuserid" jdbcType="INTEGER" property="userId" />
+    <result column="uuserName" jdbcType="VARCHAR" property="userName" />
+    <result column="uavatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="fans_count" jdbcType="INTEGER" property="fanscount" />
+    <result column="mutual" jdbcType="INTEGER" property="mutualconcern" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user_follow
+    where follow_id = #{followId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="edu.nciae.system.domain.UserFollow">
+    <selectKey keyProperty="followId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user_follow (user_id, follow_user, create_time, 
+      status)
+    values (#{userId,jdbcType=INTEGER}, #{followUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="edu.nciae.system.domain.UserFollow">
+    update user_follow
+    set user_id = #{userId,jdbcType=INTEGER},
+      follow_user = #{followUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=CHAR}
+    where follow_id = #{followId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select follow_id, user_id, follow_user, create_time, status
+    from user_follow
+    where follow_id = #{followId,jdbcType=INTEGER} and status = '0'
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select follow_id, user_id, follow_user, create_time, status
+    from user_follow
+    where status = '0'
+  </select>
+  <select id="selectByUserIdAndFollowId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select follow_id, user_id, follow_user, create_time, status
+    from user_follow
+    where user_id = #{userId,jdbcType=INTEGER} and follow_user = #{followUserId,jdbcType=INTEGER} and status = '0'
+  </select>
+  <update id="unfollowByUserIdAndFollowId" parameterType="edu.nciae.system.domain.UserFollow">
+    update user_follow
+    set status = '1'
+    where user_id = #{userId,jdbcType=INTEGER} and follow_user = #{followUserId,jdbcType=INTEGER} and status = '0'
+  </update>
+  <select id="selectUserFollowList" resultMap="UserFollowVo">
+    select u.user_id as uuserid, u.user_name as uuserName, u.avatar as uavatar, (select count(user_fans.fans_id) from user_fans where user_fans.`status`='0' and user_fans.user_id = uf.follow_user) fans_count,
+		 case when (select count(user_follow.follow_id) from user_follow where user_follow.`status`='0' and user_follow.user_id = uf.follow_user and user_follow.follow_user = #{userId}) > 0 then true else false end as mutual
+    from user_follow as uf LEFT JOIN sys_user u on uf.follow_user = u.user_id
+    where  EXISTS(SELECT user_fans.fans_id from user_fans where user_fans.user_id = uf.follow_user and user_fans.fans_user = #{userId} and status = '0') and uf.status = '0' and u.user_id = uf.follow_user and uf.user_id = #{userId}
+    <if test="keyword != null and keyword != ''">
+      and u.user_name like '%' #{keyword} '%'
+    </if>
+  </select>
+</mapper>

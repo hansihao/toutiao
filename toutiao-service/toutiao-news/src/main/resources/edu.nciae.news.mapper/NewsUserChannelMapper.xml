@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nciae.news.mapper.NewsUserChannelMapper">
+  <resultMap id="BaseResultMap" type="edu.nciae.news.domain.NewsUserChannel">
+    <id column="user_channel_id" jdbcType="INTEGER" property="userChannelId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="channel_id" jdbcType="INTEGER" property="channelId" />
+    <result column="status" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from news_user_channel
+    where user_channel_id = #{userChannelId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="edu.nciae.news.domain.NewsUserChannel">
+    <selectKey keyProperty="userChannelId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into news_user_channel (user_id, channel_id, status
+      )
+    values (#{userId,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, #{status,jdbcType=CHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="edu.nciae.news.domain.NewsUserChannel">
+    update news_user_channel
+    set user_id = #{userId,jdbcType=INTEGER},
+      channel_id = #{channelId,jdbcType=INTEGER},
+      status = #{status,jdbcType=CHAR}
+    where user_channel_id = #{userChannelId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select user_channel_id, user_id, channel_id, status
+    from news_user_channel
+    where user_channel_id = #{userChannelId,jdbcType=INTEGER} and status = '0'
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select user_channel_id, user_id, channel_id, status
+    from news_user_channel
+  </select>
+  <update id="cancelNewsUserChannel">
+    update news_user_channel
+    set status = '1'
+    where user_id = #{userId,jdbcType=INTEGER} and channel_id = #{newsChannelId,jdbcType=INTEGER}
+  </update>
+  <update id="cancelBatchNewsChannel">
+
+      update news_user_channel
+      set status = '1'
+      where user_id = #{userId} and channel_id in
+    <foreach collection="newsChannelIds" item="newschannelid" open="(" close=")" separator=",">
+      #{newschannelid}
+    </foreach>
+  </update>
+  <select id="selectNewsUserChannelByUserIdAndNewsUserChannelId" resultMap="BaseResultMap">
+    select user_channel_id, user_id, channel_id
+    from news_user_channel
+    where user_id = #{userId,jdbcType=INTEGER} and channel_id = #{newsChannelId,jdbcType=INTEGER} and status = '0'
+  </select>
+</mapper>

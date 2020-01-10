@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nciae.system.mapper.UserFansMapper">
+  <resultMap id="BaseResultMap" type="edu.nciae.system.domain.UserFans">
+    <id column="fans_id" jdbcType="INTEGER" property="fansId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="fans_user" jdbcType="INTEGER" property="fansUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="status" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <resultMap id="UserFollowVo" type="edu.nciae.system.vo.UserFollowVo">
+    <id column="uuserid" jdbcType="INTEGER" property="userId" />
+    <result column="uuserName" jdbcType="VARCHAR" property="userName" />
+    <result column="uavatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="fans_count" jdbcType="INTEGER" property="fanscount" />
+    <result column="mutual" jdbcType="INTEGER" property="mutualconcern" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user_fans
+    where fans_id = #{fansId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="edu.nciae.system.domain.UserFans">
+    <selectKey keyProperty="fansId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user_fans (user_id, fans_user, create_time, 
+      status)
+    values (#{userId,jdbcType=INTEGER}, #{fansUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="edu.nciae.system.domain.UserFans">
+    update user_fans
+    set user_id = #{userId,jdbcType=INTEGER},
+      fans_user = #{fansUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=CHAR}
+    where fans_id = #{fansId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select fans_id, user_id, fans_user, create_time, status
+    from user_fans
+    where fans_id = #{fansId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select fans_id, user_id, fans_user, create_time, status
+    from user_fans
+  </select>
+  <update id="unfansByUserIdAndFollowId" parameterType="edu.nciae.system.domain.UserFans">
+    update user_fans
+    set status = '1'
+    where user_id = #{userId,jdbcType=INTEGER} and fans_user = #{fansUserId,jdbcType=INTEGER} and status = '0'
+  </update>
+  <select id="selectUserFansList" resultMap="UserFollowVo">
+    select u.user_id as uuserid, u.user_name as uuserName, u.avatar as uavatar, (select count(user_fans.fans_id) from user_fans where user_fans.`status`='0' and user_fans.user_id = ufa.fans_user) fans_count,
+		 case when (select count(user_fans.fans_id) from user_fans where user_fans.`status`='0' and user_fans.user_id = ufa.fans_user and user_fans.fans_user = #{userId}) > 0 then true else false end as mutual
+    from user_fans as ufa LEFT JOIN sys_user u on ufa.fans_user = u.user_id
+    where  EXISTS(SELECT user_follow.follow_id from user_follow where user_follow.user_id = ufa.fans_user and user_follow.follow_user = #{userId} and status = '0') and ufa.status = '0' and u.user_id = ufa.fans_user and ufa.user_id = #{userId}
+    <if test="keyword != null and keyword != ''">
+      and u.user_name like '%' #{keyword} '%'
+    </if>
+  </select>
+</mapper>
